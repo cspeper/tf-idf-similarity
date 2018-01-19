@@ -14,9 +14,9 @@ module TfIdfSimilarity
           end
         end
       when :narray # @see https://github.com/masa16/narray/issues/21
-        norm = NMath.sqrt((@matrix ** 2).sum(1).reshape(@matrix.shape[0], 1))
+        norm = Numo::NMath.sqrt((@matrix ** 2).sum(1).reshape(@matrix.shape[0], 1))
         norm[norm.where2[1]] = 1.0 # avoid division by zero
-        NMatrix.refer(@matrix / norm) # must be NMatrix for matrix multiplication
+        Numo::NMatrix.refer(@matrix / norm) # must be NMatrix for matrix multiplication
       when :nmatrix # @see https://github.com/SciRuby/nmatrix/issues/38
         normal = NMatrix.new(:dense, @matrix.shape, 0, :float64)
         (0...@matrix.shape[1]).each do |j|
@@ -124,7 +124,7 @@ module TfIdfSimilarity
       when :gsl
         GSL::Matrix[*array]
       when :narray
-        NArray[*array]
+        Numo::NArray[*array]
       when :nmatrix # @see https://github.com/SciRuby/nmatrix/issues/91#issuecomment-18870619
         NMatrix.new(:dense, [array.size, array.empty? ? 0 : array[0].size], array.flatten, :float64)
       else
@@ -148,7 +148,7 @@ module TfIdfSimilarity
       when :gsl
         GSL::Sf::log(number)
       when :narray
-        NMath.log(number)
+        Numo::NMath.log(number)
       else
         Math.log(number)
       end
@@ -157,7 +157,7 @@ module TfIdfSimilarity
     def sqrt(number)
       case @library
       when :narray
-        NMath.sqrt(number)
+        Numo::NMath.sqrt(number)
       else
         Math.sqrt(number)
       end
